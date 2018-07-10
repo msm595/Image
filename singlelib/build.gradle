@@ -5,6 +5,13 @@ android {
     compileSdkVersion 27
     buildToolsVersion "27.0.3"
 
+    sourceSets {
+        main {
+            java.srcDirs = ['../library/src/main/java']
+            manifest.srcFile '../library/src/main/AndroidManifest.xml'
+        }
+    }
+
     defaultConfig {
         minSdkVersion 9
         targetSdkVersion 27
@@ -13,7 +20,8 @@ android {
 
         externalNativeBuild {
             cmake {
-                arguments "-DANDROID_ARM_NEON=TRUE"
+                arguments "-DANDROID_ARM_NEON=TRUE",
+                          "-DIMAGE_SINGLE_SHARED_LIB=TRUE"
             }
         }
     }
@@ -21,20 +29,20 @@ android {
     buildTypes {
         release {
             minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), '../proguard-rules.pro'
         }
     }
 
     externalNativeBuild {
         cmake {
-            path 'src/main/jni/CMakeLists.txt'
+            path '../library/src/main/jni/CMakeLists.txt'
         }
     }
 }
 
 task javah(type: Exec, dependsOn: 'compileReleaseJavaWithJavac') {
     commandLine 'javah', '-jni',
-            '-d', 'src/main/jni/image/javah',
+            '-d', '../library/src/main/jni/image/javah',
             '-cp', "${android.getSdkDirectory().getAbsolutePath()}/platforms/android-27/android.jar;build/intermediates/classes/release",
             'com.hippo.image.Image',
             'com.hippo.image.StaticImage',

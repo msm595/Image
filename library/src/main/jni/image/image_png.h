@@ -27,7 +27,6 @@
 
 
 #include <stdbool.h>
-#include <jmorecfg.h>
 
 #include "png.h"
 #include "image_library.h"

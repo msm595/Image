@@ -28,6 +28,7 @@
 
 #include "static_image.h"
 
+bool plain_init(ImageLibrary* library);
 
 StaticImage* plain_create(uint32_t width, uint32_t height, const uint8_t* buffer);
 
