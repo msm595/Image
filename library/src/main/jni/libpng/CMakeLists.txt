@@ -27,13 +27,23 @@ set(LIBPNG_SOURCES
     pngrutil.c
     pngset.c
     pngtrans.c
+    ../image/static_image.c
+    ../image/image_png.c
+    ../image/stream/stream.c
+    ../image/image_utils.c
+    ../image/image_convert.c
+    ../image/delegate_image.c
 )
 set(LIBPNG_INCLUDES
+    .
+    ../image/javah
+    ../image/stream
 )
 set(LIBPNG_DEFINITIONS
 )
 set(LIBPNG_LIBRARIES
     z
+    log
 )
 
 if (${ANDROID_ABI} STREQUAL "armeabi-v7a")
@@ -88,6 +98,15 @@ endif ()
 
 set(LIBPNG_EXPORT_LIBRARIES ${LIBPNG_LIBRARIES} PARENT_SCOPE)
 
-add_library(libpng STATIC ${LIBPNG_SOURCES})
-target_include_directories(libpng PRIVATE ${LIBPNG_INCLUDES})
-target_compile_definitions(libpng PRIVATE ${LIBPNG_DEFINITIONS})
+if(IMAGE_SINGLE_SHARED_LIB)
+    # Compile a static library for image-singlelib
+    add_library(image-png-static STATIC ${LIBPNG_SOURCES})
+    target_include_directories(image-png-static PRIVATE ${LIBPNG_INCLUDES})
+    target_compile_definitions(image-png-static PRIVATE ${LIBPNG_DEFINITIONS})
+else()
+    # Compile a shared library for image-dynamic
+    add_library(image-png SHARED ${LIBPNG_SOURCES})
+    target_include_directories(image-png PRIVATE ${LIBPNG_INCLUDES})
+    target_compile_definitions(image-png PRIVATE ${LIBPNG_DEFINITIONS})
+    target_link_libraries(image-png PRIVATE ${LIBPNG_LIBRARIES})
+endif()

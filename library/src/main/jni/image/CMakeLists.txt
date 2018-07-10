@@ -15,13 +15,12 @@
 cmake_minimum_required(VERSION 3.4.1)
 project(image C)
 
+OPTION(IMAGE_SINGLE_SHARED_LIB "Compile image as a single shared library with all codecs included" FALSE)
+
 set(IMAGE_SOURCES
     image.c
     image_plain.c
     image_bmp.c
-    image_jpeg.c
-    image_png.c
-    image_gif.c
     image_utils.c
     image_convert.c
     static_image.c
@@ -32,6 +31,15 @@ set(IMAGE_SOURCES
     stream/buffer_stream.c
     stream/java_stream.c
 )
+if(IMAGE_SINGLE_SHARED_LIB)
+    set(IMAGE_SOURCES
+        ${IMAGE_SOURCES}
+        #image_jpeg.c
+        #image_png.c
+        #image_gif.c
+    )
+endif()
+
 set(IMAGE_INCLUDES
     .
     javah
@@ -40,21 +48,37 @@ set(IMAGE_INCLUDES
     ../libpng
     ../giflib
 )
-set(IMAGE_DEFINITIONS
-    -DIMAGE_SINGLE_SHARED_LIB
-)
+
+if(IMAGE_SINGLE_SHARED_LIB)
+    set(IMAGE_DEFINITIONS
+        -DIMAGE_SINGLE_SHARED_LIB
+    )
+endif()
+
+if(IMAGE_SINGLE_SHARED_LIB)
+    set(IMAGE_DEP_LIBRARY_SUFFIX "-static")
+else()
+    set(IMAGE_DEP_LIBRARY_SUFFIX "")
+endif()
+
 set(IMAGE_LIBRARIES
-    libjpeg-turbo
-    ${LIBJPEG_TURBO_EXPORT_LIBRARIES}
-    libpng
-    ${LIBPNG_EXPORT_LIBRARIES}
-    giflib
-    ${GIFLIB_EXPORT_LIBRARIES}
+    image-jpeg${IMAGE_DEP_LIBRARY_SUFFIX}
+    image-png${IMAGE_DEP_LIBRARY_SUFFIX}
+    image-gif${IMAGE_DEP_LIBRARY_SUFFIX}
     log
     jnigraphics
     GLESv2
     dl
 )
+
+if(IMAGE_SINGLE_SHARED_LIB)
+    set(IMAGE_LIBRARIES
+        ${IMAGE_LIBRARIES}
+        ${LIBJPEG_TURBO_EXPORT_LIBRARIES}
+        ${LIBPNG_EXPORT_LIBRARIES}
+        ${GIFLIB_EXPORT_LIBRARIES}
+    )
+endif()
 
 if (${ANDROID_ABI} STREQUAL "armeabi-v7a")
 
@@ -84,3 +108,5 @@ add_library(image SHARED ${IMAGE_SOURCES})
 target_include_directories(image PRIVATE ${IMAGE_INCLUDES})
 target_compile_definitions(image PRIVATE ${IMAGE_DEFINITIONS})
 target_link_libraries(image PRIVATE ${IMAGE_LIBRARIES})
+
+unset(IMAGE_SINGLE_SHARED_LIB CACHE)

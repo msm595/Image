@@ -49,12 +49,20 @@ set(LIBJPEG_TURBO_SOURCES
     jquant1.c
     jquant2.c
     jutils.c
+    ../image/image_jpeg.c
+    ../image/static_image.c
+    ../image/image_convert.c
+    ../image/image_utils.c
 )
 set(LIBJPEG_TURBO_INCLUDES
+    .
+    ../image/javah
+    ../image/stream
 )
 set(LIBJPEG_TURBO_DEFINITIONS
 )
 set(LIBJPEG_TURBO_LIBRARIES
+    log
 )
 
 if (${ANDROID_ABI} STREQUAL "armeabi-v7a")
@@ -160,6 +168,15 @@ endif ()
 
 set(LIBJPEG_TURBO_EXPORT_LIBRARIES ${LIBJPEG_TURBO_LIBRARIES} PARENT_SCOPE)
 
-add_library(libjpeg-turbo STATIC ${LIBJPEG_TURBO_SOURCES})
-target_include_directories(libjpeg-turbo PRIVATE ${LIBJPEG_TURBO_INCLUDES})
-target_compile_definitions(libjpeg-turbo PRIVATE ${LIBJPEG_TURBO_DEFINITIONS})
+if(IMAGE_SINGLE_SHARED_LIB)
+    # Compile a static library for image-singlelib
+    add_library(image-jpeg-static STATIC ${LIBJPEG_TURBO_SOURCES})
+    target_include_directories(image-jpeg-static PRIVATE ${LIBJPEG_TURBO_INCLUDES})
+    target_compile_definitions(image-jpeg-static PRIVATE ${LIBJPEG_TURBO_DEFINITIONS})
+else()
+    # Compile a shared library for image-dynamic
+    add_library(image-jpeg SHARED ${LIBJPEG_TURBO_SOURCES})
+    target_include_directories(image-jpeg PRIVATE ${LIBJPEG_TURBO_INCLUDES})
+    target_compile_definitions(image-jpeg PRIVATE ${LIBJPEG_TURBO_DEFINITIONS})
+    target_link_libraries(image-jpeg PRIVATE ${LIBJPEG_TURBO_LIBRARIES})
+endif()

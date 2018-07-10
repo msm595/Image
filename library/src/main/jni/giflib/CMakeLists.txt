@@ -20,16 +20,31 @@ set(GIFLIB_SOURCES
     gif_hash.c
     gifalloc.c
     openbsd-reallocarray.c
+    ../image/image_gif.c
+    ../image/delegate_image.c
 )
 set(GIFLIB_INCLUDES
+    .
+    ../image/javah
+    ../image/stream
 )
 set(GIFLIB_DEFINITIONS
 )
 set(GIFLIB_LIBRARIES
+    log
 )
 
 set(GIFLIB_EXPORT_LIBRARIES ${GIFLIB_LIBRARIES} PARENT_SCOPE)
 
-add_library(giflib STATIC ${GIFLIB_SOURCES})
-target_include_directories(giflib PRIVATE ${GIFLIB_INCLUDES})
-target_compile_definitions(giflib PRIVATE ${GIFLIB_DEFINITIONS})
+if(IMAGE_SINGLE_SHARED_LIB)
+    # Compile a static library for image-singlelib
+    add_library(image-gif-static STATIC ${GIFLIB_SOURCES})
+    target_include_directories(image-gif-static PRIVATE ${GIFLIB_INCLUDES})
+    target_compile_definitions(image-gif-static PRIVATE ${GIFLIB_DEFINITIONS})
+else()
+    # Compile a shared library for image-dynamic
+    add_library(image-gif SHARED ${GIFLIB_SOURCES})
+    target_include_directories(image-gif PRIVATE ${GIFLIB_INCLUDES})
+    target_compile_definitions(image-gif PRIVATE ${GIFLIB_DEFINITIONS})
+    target_link_libraries(image-gif PRIVATE ${GIFLIB_LIBRARIES})
+endif()
