@@ -52,7 +52,7 @@ set(LIBJPEG_TURBO_SOURCES
     libjpeg-turbo/jutils.c
 )
 set(LIBJPEG_TURBO_INCLUDES
-    ${IMAGE_BASE_INCLUDES}
+    ${IMAGE_EXPORT_INCLUDES}
     ${CMAKE_CURRENT_SOURCE_DIR}
     ${CMAKE_CURRENT_SOURCE_DIR}/libjpeg-turbo
 )
@@ -60,13 +60,6 @@ set(LIBJPEG_TURBO_DEFINITIONS
 )
 set(LIBJPEG_TURBO_LIBRARIES
 )
-if(NOT ${IMAGE_SINGLE_SHARED_LIB})
-    set(LIBJPEG_TURBO_LIBRARIES
-        ${LIBJPEG_TURBO_LIBRARIES}
-        image
-        log
-    )
-endif()
 
 if (${ANDROID_ABI} STREQUAL "armeabi-v7a")
 
@@ -191,19 +184,25 @@ else ()
 endif ()
 
 if(IMAGE_SINGLE_SHARED_LIB)
-    set(LIBJPEG_TURBO_EXPORT_LIBRARIES ${LIBJPEG_TURBO_LIBRARIES} PARENT_SCOPE)
-    set(LIBJPEG_TURBO_EXPORT_INCLUDES ${LIBJPEG_TURBO_INCLUDES} PARENT_SCOPE)
+    # Compile a static library for image-singlelib
+    set(LIBJPEG_TURBO_LIBRARY_NAME image-jpeg-static)
+    set(LIBJPEG_TURBO_LIBRARY_TYPE STATIC)
+    set(LIBJPEG_TURBO_INCLUDES_VISIBILITY PUBLIC) # Share include dir with image project
+else()
+    # Compile a shared library to be imported by image-core
+    set(LIBJPEG_TURBO_LIBRARY_NAME image-jpeg)
+    set(LIBJPEG_TURBO_LIBRARY_TYPE SHARED)
+    set(LIBJPEG_TURBO_INCLUDES_VISIBILITY PRIVATE)
+    
+    # Link against image shared lib to get helper methods
+    set(LIBJPEG_TURBO_LIBRARIES
+        ${LIBJPEG_TURBO_LIBRARIES}
+        image
+        log
+    )
 endif()
 
-if(IMAGE_SINGLE_SHARED_LIB)
-    # Compile a static library for image-singlelib
-    add_library(image-jpeg-static STATIC ${LIBJPEG_TURBO_SOURCES})
-    target_include_directories(image-jpeg-static PRIVATE ${LIBJPEG_TURBO_INCLUDES})
-    target_compile_definitions(image-jpeg-static PRIVATE ${LIBJPEG_TURBO_DEFINITIONS})
-else()
-    # Compile a shared library for image-dynamic
-    add_library(image-jpeg SHARED ${LIBJPEG_TURBO_SOURCES})
-    target_include_directories(image-jpeg PRIVATE ${LIBJPEG_TURBO_INCLUDES})
-    target_compile_definitions(image-jpeg PRIVATE ${LIBJPEG_TURBO_DEFINITIONS})
-    target_link_libraries(image-jpeg PRIVATE ${LIBJPEG_TURBO_LIBRARIES})
-endif()
+add_library(${LIBJPEG_TURBO_LIBRARY_NAME} ${LIBJPEG_TURBO_LIBRARY_TYPE} ${LIBJPEG_TURBO_SOURCES})
+target_include_directories(${LIBJPEG_TURBO_LIBRARY_NAME} ${LIBJPEG_TURBO_INCLUDES_VISIBILITY} ${LIBJPEG_TURBO_INCLUDES})
+target_compile_definitions(${LIBJPEG_TURBO_LIBRARY_NAME} PRIVATE ${LIBJPEG_TURBO_DEFINITIONS})
+target_link_libraries(${LIBJPEG_TURBO_LIBRARY_NAME} PRIVATE ${LIBJPEG_TURBO_LIBRARIES})

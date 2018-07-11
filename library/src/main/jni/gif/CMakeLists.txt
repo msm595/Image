@@ -24,7 +24,7 @@ set(GIFLIB_SOURCES
 )
 
 set(GIFLIB_INCLUDES
-    ${IMAGE_BASE_INCLUDES}
+    ${IMAGE_EXPORT_INCLUDES}
     ${CMAKE_CURRENT_SOURCE_DIR}
     ${CMAKE_CURRENT_SOURCE_DIR}/giflib/lib
 )
@@ -34,7 +34,19 @@ set(GIFLIB_DEFINITIONS
 
 set(GIFLIB_LIBRARIES
 )
-if(NOT ${IMAGE_SINGLE_SHARED_LIB})
+
+if(IMAGE_SINGLE_SHARED_LIB)
+    # Compile a static library for image-singlelib
+    set(GIFLIB_LIBRARY_NAME image-gif-static)
+    set(GIFLIB_LIBRARY_TYPE STATIC)
+    set(GIFLIB_INCLUDES_VISIBILITY PUBLIC) # Share include dir with image project
+else()
+    # Compile a shared library to be imported by image-core
+    set(GIFLIB_LIBRARY_NAME image-gif)
+    set(GIFLIB_LIBRARY_TYPE SHARED)
+    set(GIFLIB_INCLUDES_VISIBILITY PRIVATE)
+    
+    # Link against image shared lib to get helper methods
     set(GIFLIB_LIBRARIES
         ${GIFLIB_LIBRARIES}
         image
@@ -42,21 +54,7 @@ if(NOT ${IMAGE_SINGLE_SHARED_LIB})
     )
 endif()
 
-# TODO: untangle these
-if(IMAGE_SINGLE_SHARED_LIB)
-    set(GIFLIB_EXPORT_LIBRARIES ${GIFLIB_LIBRARIES} PARENT_SCOPE)
-    set(GIFLIB_EXPORT_INCLUDES ${GIFLIB_INCLUDES} PARENT_SCOPE)
-endif()
-
-if(IMAGE_SINGLE_SHARED_LIB)
-    # Compile a static library for image-singlelib
-    add_library(image-gif-static STATIC ${GIFLIB_SOURCES})
-    target_include_directories(image-gif-static PRIVATE ${GIFLIB_INCLUDES})
-    target_compile_definitions(image-gif-static PRIVATE ${GIFLIB_DEFINITIONS})
-else()
-    # Compile a shared library to be imported by image-core
-    add_library(image-gif SHARED ${GIFLIB_SOURCES})
-    target_include_directories(image-gif PRIVATE ${GIFLIB_INCLUDES})
-    target_compile_definitions(image-gif PRIVATE ${GIFLIB_DEFINITIONS})
-    target_link_libraries(image-gif PRIVATE ${GIFLIB_LIBRARIES})
-endif()
+add_library(${GIFLIB_LIBRARY_NAME} ${GIFLIB_LIBRARY_TYPE} ${GIFLIB_SOURCES})
+target_include_directories(${GIFLIB_LIBRARY_NAME} ${GIFLIB_INCLUDES_VISIBILITY} ${GIFLIB_INCLUDES})
+target_compile_definitions(${GIFLIB_LIBRARY_NAME} PRIVATE ${GIFLIB_DEFINITIONS})
+target_link_libraries(${GIFLIB_LIBRARY_NAME} PRIVATE ${GIFLIB_LIBRARIES})

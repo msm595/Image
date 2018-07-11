@@ -30,7 +30,7 @@ set(LIBPNG_SOURCES
     libpng/pngtrans.c
 )
 set(LIBPNG_INCLUDES
-    ${IMAGE_BASE_INCLUDES}
+    ${IMAGE_EXPORT_INCLUDES}
     ${CMAKE_CURRENT_SOURCE_DIR}
     ${CMAKE_CURRENT_SOURCE_DIR}/libpng
 )
@@ -38,15 +38,7 @@ set(LIBPNG_DEFINITIONS
 )
 set(LIBPNG_LIBRARIES
     z
-    log
 )
-if(NOT ${IMAGE_SINGLE_SHARED_LIB})
-    set(LIBPNG_LIBRARIES
-        ${LIBPNG_LIBRARIES}
-        image
-        log
-    )
-endif()
 
 if (${ANDROID_ABI} STREQUAL "armeabi-v7a")
 
@@ -103,19 +95,25 @@ elseif (${ANDROID_ABI} STREQUAL "arm64-v8a")
 endif ()
 
 if(IMAGE_SINGLE_SHARED_LIB)
-    set(LIBPNG_EXPORT_LIBRARIES ${LIBPNG_LIBRARIES} PARENT_SCOPE)
-    set(LIBPNG_EXPORT_INCLUDES ${LIBPNG_INCLUDES} PARENT_SCOPE)
+    # Compile a static library for image-singlelib
+    set(LIBPNG_LIBRARY_NAME image-png-static)
+    set(LIBPNG_LIBRARY_TYPE STATIC)
+    set(LIBPNG_INCLUDES_VISIBILITY PUBLIC) # Share include dir with image project
+else()
+    # Compile a shared library to be imported by image-core
+    set(LIBPNG_LIBRARY_NAME image-png)
+    set(LIBPNG_LIBRARY_TYPE SHARED)
+    set(LIBPNG_INCLUDES_VISIBILITY PRIVATE)
+    
+    # Link against image shared lib to get helper methods
+    set(LIBPNG_LIBRARIES
+        ${LIBPNG_LIBRARIES}
+        image
+        log
+    )
 endif()
 
-if(IMAGE_SINGLE_SHARED_LIB)
-    # Compile a static library for image-singlelib
-    add_library(image-png-static STATIC ${LIBPNG_SOURCES})
-    target_include_directories(image-png-static PRIVATE ${LIBPNG_INCLUDES})
-    target_compile_definitions(image-png-static PRIVATE ${LIBPNG_DEFINITIONS})
-else()
-    # Compile a shared library for image-dynamic
-    add_library(image-png SHARED ${LIBPNG_SOURCES})
-    target_include_directories(image-png PRIVATE ${LIBPNG_INCLUDES})
-    target_compile_definitions(image-png PRIVATE ${LIBPNG_DEFINITIONS})
-    target_link_libraries(image-png PRIVATE ${LIBPNG_LIBRARIES})
-endif()
+add_library(${LIBPNG_LIBRARY_NAME} ${LIBPNG_LIBRARY_TYPE} ${LIBPNG_SOURCES})
+target_include_directories(${LIBPNG_LIBRARY_NAME} ${LIBPNG_INCLUDES_VISIBILITY} ${LIBPNG_INCLUDES})
+target_compile_definitions(${LIBPNG_LIBRARY_NAME} PRIVATE ${LIBPNG_DEFINITIONS})
+target_link_libraries(${LIBPNG_LIBRARY_NAME} PRIVATE ${LIBPNG_LIBRARIES})

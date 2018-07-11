@@ -12,6 +12,7 @@ android {
     }
     
     packagingOptions {
+        // Do not include libimage.so in the codec aar
         exclude '**/libimage.so'
     }
 
