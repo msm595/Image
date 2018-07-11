@@ -2,26 +2,26 @@ apply plugin: 'com.android.library'
 apply plugin: 'com.github.dcendents.android-maven'
 
 android {
-    compileSdkVersion 27
-    buildToolsVersion "27.0.3"
+    compileSdkVersion rootProject.ext.compileSdkVersion
+    buildToolsVersion rootProject.ext.buildToolsVersion
 
     sourceSets {
         main {
-            java.srcDirs = ['../library/src/main/java']
-            manifest.srcFile '../library/src/main/AndroidManifest.xml'
+            java.srcDirs = ['../src/main/java']
+            manifest.srcFile '../src/main/AndroidManifest.xml'
         }
     }
 
     defaultConfig {
-        minSdkVersion 9
-        targetSdkVersion 27
-        versionCode 22
-        versionName "0.2.8"
+        minSdkVersion rootProject.ext.minSdkVersion
+        targetSdkVersion rootProject.ext.targetSdkVersion
+        versionCode rootProject.ext.versionCode
+        versionName rootProject.ext.versionName
 
         externalNativeBuild {
             cmake {
                 arguments "-DANDROID_ARM_NEON=TRUE",
-                          "-DIMAGE_SINGLE_SHARED_LIB=TRUE"
+                          "-DIMAGE_SINGLE_SHARED_LIB=FALSE"
             }
         }
     }
@@ -35,14 +35,14 @@ android {
 
     externalNativeBuild {
         cmake {
-            path '../library/src/main/jni/CMakeLists.txt'
+            path '../src/main/jni/CMakeLists.txt'
         }
     }
 }
 
 task javah(type: Exec, dependsOn: 'compileReleaseJavaWithJavac') {
     commandLine 'javah', '-jni',
-            '-d', '../library/src/main/jni/image/javah',
+            '-d', '../src/main/jni/image/javah',
             '-cp', "${android.getSdkDirectory().getAbsolutePath()}/platforms/android-27/android.jar;build/intermediates/classes/release",
             'com.hippo.image.Image',
             'com.hippo.image.StaticImage',
@@ -55,7 +55,6 @@ task javah(type: Exec, dependsOn: 'compileReleaseJavaWithJavac') {
 
 dependencies {
     implementation 'com.android.support:support-annotations:27.1.0'
-    //implementation 'com.github.msm595:Image:seperate-compilation-modules-SNAPSHOT'
     testImplementation 'junit:junit:4.12'
 }
 

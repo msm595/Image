@@ -15,6 +15,10 @@
 cmake_minimum_required(VERSION 3.4.1)
 project(libpng C)
 
+if(NOT TARGET cpufeatures)
+add_subdirectory(../cpufeatures ./cpufeatures)
+endif()
+
 set(LIBPNG_SOURCES
     png.c
     pngerror.c
@@ -96,7 +100,9 @@ elseif (${ANDROID_ABI} STREQUAL "arm64-v8a")
 
 endif ()
 
-set(LIBPNG_EXPORT_LIBRARIES ${LIBPNG_LIBRARIES} PARENT_SCOPE)
+if(IMAGE_SINGLE_SHARED_LIB)
+    set(LIBPNG_EXPORT_LIBRARIES ${LIBPNG_LIBRARIES} PARENT_SCOPE)
+endif()
 
 if(IMAGE_SINGLE_SHARED_LIB)
     # Compile a static library for image-singlelib
