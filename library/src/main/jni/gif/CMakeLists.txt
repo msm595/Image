@@ -13,18 +13,20 @@
 # limitations under the License.
 
 cmake_minimum_required(VERSION 3.4.1)
-project(giflib C)
+project(image-gif C)
 
 set(GIFLIB_SOURCES
-    dgif_lib.c
-    gif_hash.c
-    gifalloc.c
-    openbsd-reallocarray.c
-    ../image/image_gif.c
+    image_gif.c
+    giflib/dgif_lib.c
+    giflib/gif_hash.c
+    giflib/gifalloc.c
+    giflib/openbsd-reallocarray.c
     ../image/delegate_image.c
 )
 set(GIFLIB_INCLUDES
     .
+    giflib
+    ../image
     ../image/javah
     ../image/stream
 )

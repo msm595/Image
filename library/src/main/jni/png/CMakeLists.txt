@@ -13,26 +13,26 @@
 # limitations under the License.
 
 cmake_minimum_required(VERSION 3.4.1)
-project(libpng C)
+project(image-png C)
 
 if(NOT TARGET cpufeatures)
 add_subdirectory(../cpufeatures ./cpufeatures)
 endif()
 
 set(LIBPNG_SOURCES
-    png.c
-    pngerror.c
-    pngget.c
-    pngmem.c
-    pngpread.c
-    pngread.c
-    pngrio.c
-    pngrtran.c
-    pngrutil.c
-    pngset.c
-    pngtrans.c
+    image_png.c
+    libpng/png.c
+    libpng/pngerror.c
+    libpng/pngget.c
+    libpng/pngmem.c
+    libpng/pngpread.c
+    libpng/pngread.c
+    libpng/pngrio.c
+    libpng/pngrtran.c
+    libpng/pngrutil.c
+    libpng/pngset.c
+    libpng/pngtrans.c
     ../image/static_image.c
-    ../image/image_png.c
     ../image/stream/stream.c
     ../image/image_utils.c
     ../image/image_convert.c
@@ -40,6 +40,8 @@ set(LIBPNG_SOURCES
 )
 set(LIBPNG_INCLUDES
     .
+    libpng
+    ../image
     ../image/javah
     ../image/stream
 )
@@ -56,8 +58,8 @@ if (${ANDROID_ABI} STREQUAL "armeabi-v7a")
 
   set(LIBPNG_SOURCES
       ${LIBPNG_SOURCES}
-      arm/arm_init.c
-      arm/filter_neon.S
+      libpng/arm/arm_init.c
+      libpng/arm/filter_neon.S
   )
   set(LIBPNG_INCLUDES
       ${LIBPNG_INCLUDES}
@@ -80,8 +82,8 @@ elseif (${ANDROID_ABI} STREQUAL "arm64-v8a")
 
   set(LIBPNG_SOURCES
       ${LIBPNG_SOURCES}
-      arm/arm_init.c
-      arm/filter_neon_intrinsics.c
+      libpng/arm/arm_init.c
+      libpng/arm/filter_neon_intrinsics.c
   )
   set(LIBPNG_INCLUDES
       ${LIBPNG_INCLUDES}
