@@ -52,11 +52,9 @@ set(LIBJPEG_TURBO_SOURCES
     libjpeg-turbo/jutils.c
 )
 set(LIBJPEG_TURBO_INCLUDES
+    ${IMAGE_BASE_INCLUDES}
     ${CMAKE_CURRENT_SOURCE_DIR}
     ${CMAKE_CURRENT_SOURCE_DIR}/libjpeg-turbo
-    ${CMAKE_CURRENT_SOURCE_DIR}/../image
-    ${CMAKE_CURRENT_SOURCE_DIR}/../image/javah
-    ${CMAKE_CURRENT_SOURCE_DIR}/../image/stream
 )
 set(LIBJPEG_TURBO_DEFINITIONS
 )

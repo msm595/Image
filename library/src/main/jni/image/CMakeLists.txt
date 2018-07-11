@@ -30,10 +30,14 @@ set(IMAGE_SOURCES
     stream/java_stream.c
 )
 
-set(IMAGE_INCLUDES
+set(IMAGE_BASE_INCLUDES
     ${CMAKE_CURRENT_SOURCE_DIR}
     ${CMAKE_CURRENT_SOURCE_DIR}/javah
     ${CMAKE_CURRENT_SOURCE_DIR}/stream
+)
+
+set(IMAGE_INCLUDES
+    ${IMAGE_BASE_INCLUDES}
     ${LIBPNG_EXPORT_INCLUDES}
     ${LIBJPEG_TURBO_EXPORT_INCLUDES}
     ${GIFLIB_EXPORT_INCLUDES}
@@ -49,7 +53,6 @@ set(IMAGE_LIBRARIES
     log
     jnigraphics
     GLESv2
-    dl
 )
 
 if(IMAGE_SINGLE_SHARED_LIB)
@@ -61,6 +64,11 @@ if(IMAGE_SINGLE_SHARED_LIB)
         ${LIBJPEG_TURBO_EXPORT_LIBRARIES}
         ${LIBPNG_EXPORT_LIBRARIES}
         ${GIFLIB_EXPORT_LIBRARIES}
+    )
+else()
+    set(IMAGE_LIBRARIES
+        ${IMAGE_LIBRARIES}
+        dl
     )
 endif()
 

@@ -15,10 +15,6 @@
 cmake_minimum_required(VERSION 3.4.1)
 project(image-png C)
 
-if(NOT TARGET cpufeatures)
-add_subdirectory(../cpufeatures ./cpufeatures)
-endif()
-
 set(LIBPNG_SOURCES
     image_png.c
     libpng/png.c
@@ -34,11 +30,9 @@ set(LIBPNG_SOURCES
     libpng/pngtrans.c
 )
 set(LIBPNG_INCLUDES
+    ${IMAGE_BASE_INCLUDES}
     ${CMAKE_CURRENT_SOURCE_DIR}
     ${CMAKE_CURRENT_SOURCE_DIR}/libpng
-    ${CMAKE_CURRENT_SOURCE_DIR}/../image
-    ${CMAKE_CURRENT_SOURCE_DIR}/../image/javah
-    ${CMAKE_CURRENT_SOURCE_DIR}/../image/stream
 )
 set(LIBPNG_DEFINITIONS
 )

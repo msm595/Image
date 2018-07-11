@@ -22,15 +22,16 @@ set(GIFLIB_SOURCES
     giflib/lib/gifalloc.c
     giflib/lib/openbsd-reallocarray.c
 )
+
 set(GIFLIB_INCLUDES
+    ${IMAGE_BASE_INCLUDES}
     ${CMAKE_CURRENT_SOURCE_DIR}
     ${CMAKE_CURRENT_SOURCE_DIR}/giflib/lib
-    ${CMAKE_CURRENT_SOURCE_DIR}/../image
-    ${CMAKE_CURRENT_SOURCE_DIR}/../image/javah
-    ${CMAKE_CURRENT_SOURCE_DIR}/../image/stream
 )
+
 set(GIFLIB_DEFINITIONS
 )
+
 set(GIFLIB_LIBRARIES
 )
 if(NOT ${IMAGE_SINGLE_SHARED_LIB})
@@ -53,7 +54,7 @@ if(IMAGE_SINGLE_SHARED_LIB)
     target_include_directories(image-gif-static PRIVATE ${GIFLIB_INCLUDES})
     target_compile_definitions(image-gif-static PRIVATE ${GIFLIB_DEFINITIONS})
 else()
-    # Compile a shared library for image-dynamic
+    # Compile a shared library to be imported by image-core
     add_library(image-gif SHARED ${GIFLIB_SOURCES})
     target_include_directories(image-gif PRIVATE ${GIFLIB_INCLUDES})
     target_compile_definitions(image-gif PRIVATE ${GIFLIB_DEFINITIONS})
