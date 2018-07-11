@@ -29,14 +29,6 @@ set(IMAGE_SOURCES
     stream/buffer_stream.c
     stream/java_stream.c
 )
-if(IMAGE_SINGLE_SHARED_LIB)
-    set(IMAGE_SOURCES
-        ${IMAGE_SOURCES}
-        #image_jpeg.c
-        #image_png.c
-        #image_gif.c
-    )
-endif()
 
 set(IMAGE_INCLUDES
     ${CMAKE_CURRENT_SOURCE_DIR}

@@ -16,18 +16,19 @@ cmake_minimum_required(VERSION 3.4.1)
 project(image-gif C)
 
 set(GIFLIB_SOURCES
+    image_gif.c
     giflib/lib/dgif_lib.c
     giflib/lib/gif_hash.c
     giflib/lib/gifalloc.c
     giflib/lib/openbsd-reallocarray.c
-    ../image/image_gif.c
     ../image/delegate_image.c
 )
 set(GIFLIB_INCLUDES
+    ${CMAKE_CURRENT_SOURCE_DIR}
     ${CMAKE_CURRENT_SOURCE_DIR}/giflib/lib
-    .
-    ../image/javah
-    ../image/stream
+    ${CMAKE_CURRENT_SOURCE_DIR}/../image
+    ${CMAKE_CURRENT_SOURCE_DIR}/../image/javah
+    ${CMAKE_CURRENT_SOURCE_DIR}/../image/stream
 )
 set(GIFLIB_DEFINITIONS
 )

@@ -20,6 +20,7 @@ add_subdirectory(../cpufeatures ./cpufeatures)
 endif()
 
 set(LIBPNG_SOURCES
+    image_png.c
     libpng/png.c
     libpng/pngerror.c
     libpng/pngget.c
@@ -32,7 +33,6 @@ set(LIBPNG_SOURCES
     libpng/pngset.c
     libpng/pngtrans.c
     ../image/static_image.c
-    ../image/image_png.c
     ../image/stream/stream.c
     ../image/image_utils.c
     ../image/image_convert.c
@@ -41,8 +41,9 @@ set(LIBPNG_SOURCES
 set(LIBPNG_INCLUDES
     ${CMAKE_CURRENT_SOURCE_DIR}
     ${CMAKE_CURRENT_SOURCE_DIR}/libpng
-    ../image/javah
-    ../image/stream
+    ${CMAKE_CURRENT_SOURCE_DIR}/../image
+    ${CMAKE_CURRENT_SOURCE_DIR}/../image/javah
+    ${CMAKE_CURRENT_SOURCE_DIR}/../image/stream
 )
 set(LIBPNG_DEFINITIONS
 )

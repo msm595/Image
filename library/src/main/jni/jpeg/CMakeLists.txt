@@ -16,6 +16,7 @@ cmake_minimum_required(VERSION 3.4.1)
 project(image-jpeg C)
 
 set(LIBJPEG_TURBO_SOURCES
+    image_jpeg.c
     libjpeg-turbo/jaricom.c
     libjpeg-turbo/jcomapi.c
     libjpeg-turbo/jdapimin.c
@@ -49,7 +50,6 @@ set(LIBJPEG_TURBO_SOURCES
     libjpeg-turbo/jquant1.c
     libjpeg-turbo/jquant2.c
     libjpeg-turbo/jutils.c
-    ../image/image_jpeg.c
     ../image/static_image.c
     ../image/image_convert.c
     ../image/image_utils.c
@@ -57,9 +57,9 @@ set(LIBJPEG_TURBO_SOURCES
 set(LIBJPEG_TURBO_INCLUDES
     ${CMAKE_CURRENT_SOURCE_DIR}
     ${CMAKE_CURRENT_SOURCE_DIR}/libjpeg-turbo
-    .
-    ../image/javah
-    ../image/stream
+    ${CMAKE_CURRENT_SOURCE_DIR}/../image
+    ${CMAKE_CURRENT_SOURCE_DIR}/../image/javah
+    ${CMAKE_CURRENT_SOURCE_DIR}/../image/stream
 )
 set(LIBJPEG_TURBO_DEFINITIONS
 )

@@ -19,6 +19,7 @@ android {
 
         externalNativeBuild {
             cmake {
+                targets "image-png"
                 arguments "-DANDROID_ARM_NEON=TRUE",
                           "-DIMAGE_SINGLE_SHARED_LIB=FALSE"
             }
@@ -34,7 +35,7 @@ android {
 
     externalNativeBuild {
         cmake {
-            path '../src/main/jni/png/CMakeLists.txt'
+            path '../src/main/jni/CMakeLists.txt'
         }
     }
 }

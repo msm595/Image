@@ -18,13 +18,9 @@ project(root)
 OPTION(IMAGE_SINGLE_SHARED_LIB "Compile image as a single shared library with all codecs included" FALSE)
 
 add_subdirectory(cpufeatures)
-
-if(IMAGE_SINGLE_SHARED_LIB)
-    add_subdirectory(jpeg)
-    add_subdirectory(png)
-    add_subdirectory(gif)
-endif()
-
+add_subdirectory(jpeg)
+add_subdirectory(png)
+add_subdirectory(gif)
 add_subdirectory(image)
 
 unset(IMAGE_SINGLE_SHARED_LIB CACHE)

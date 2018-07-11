@@ -20,6 +20,7 @@ android {
 
         externalNativeBuild {
             cmake {
+                targets "image"
                 arguments "-DANDROID_ARM_NEON=TRUE",
                           "-DIMAGE_SINGLE_SHARED_LIB=FALSE"
             }
