@@ -13,7 +13,7 @@
 # limitations under the License.
 
 cmake_minimum_required(VERSION 3.4.1)
-project(libpng C)
+project(image-png C)
 
 if(NOT TARGET cpufeatures)
 add_subdirectory(../cpufeatures ./cpufeatures)
@@ -41,7 +41,6 @@ set(LIBPNG_SOURCES
 set(LIBPNG_INCLUDES
     ${CMAKE_CURRENT_SOURCE_DIR}
     ${CMAKE_CURRENT_SOURCE_DIR}/libpng
-    .
     ../image/javah
     ../image/stream
 )
