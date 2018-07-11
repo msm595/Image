@@ -22,11 +22,15 @@
 #include <malloc.h>
 
 #include "image.h"
+
+#ifdef IMAGE_SINGLE_SHARED_LIB
 #include "image_plain.h"
 #include "image_bmp.h"
 #include "image_jpeg.h"
 #include "image_png.h"
 #include "image_gif.h"
+#endif
+
 #include "../log.h"
 
 static ImageLibrary image_libraries[IMAGE_FORMAT_MAX_COUNT] = { 0 };
