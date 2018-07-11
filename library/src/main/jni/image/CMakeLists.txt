@@ -15,8 +15,6 @@
 cmake_minimum_required(VERSION 3.4.1)
 project(image C)
 
-OPTION(IMAGE_SINGLE_SHARED_LIB "Compile image as a single shared library with all codecs included" FALSE)
-
 set(IMAGE_SOURCES
     image.c
     image_plain.c
@@ -55,16 +53,7 @@ if(IMAGE_SINGLE_SHARED_LIB)
     )
 endif()
 
-if(IMAGE_SINGLE_SHARED_LIB)
-    set(IMAGE_DEP_LIBRARY_SUFFIX "-static")
-else()
-    set(IMAGE_DEP_LIBRARY_SUFFIX "")
-endif()
-
 set(IMAGE_LIBRARIES
-    image-jpeg${IMAGE_DEP_LIBRARY_SUFFIX}
-    image-png${IMAGE_DEP_LIBRARY_SUFFIX}
-    image-gif${IMAGE_DEP_LIBRARY_SUFFIX}
     log
     jnigraphics
     GLESv2
@@ -74,6 +63,9 @@ set(IMAGE_LIBRARIES
 if(IMAGE_SINGLE_SHARED_LIB)
     set(IMAGE_LIBRARIES
         ${IMAGE_LIBRARIES}
+        image-jpeg-static
+        image-png-static
+        image-gif-static
         ${LIBJPEG_TURBO_EXPORT_LIBRARIES}
         ${LIBPNG_EXPORT_LIBRARIES}
         ${GIFLIB_EXPORT_LIBRARIES}
@@ -108,5 +100,3 @@ add_library(image SHARED ${IMAGE_SOURCES})
 target_include_directories(image PRIVATE ${IMAGE_INCLUDES})
 target_compile_definitions(image PRIVATE ${IMAGE_DEFINITIONS})
 target_link_libraries(image PRIVATE ${IMAGE_LIBRARIES})
-
-unset(IMAGE_SINGLE_SHARED_LIB CACHE)

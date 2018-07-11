@@ -22,10 +22,6 @@
 #define IMAGE_IMAGE_PNG_H
 
 
-#include "config.h"
-#ifdef IMAGE_SUPPORT_PNG
-
-
 #include <stdbool.h>
 
 #include "png.h"
@@ -51,9 +47,6 @@ bool png_decode_info(Stream* stream, ImageInfo* info);
 
 bool png_decode_buffer(Stream* stream, bool clip, uint32_t x, uint32_t y, uint32_t width,
     uint32_t height, int32_t config, uint32_t ratio, BufferContainer* container);
-
-
-#endif // IMAGE_SUPPORT_PNG
 
 
 #endif // IMAGE_IMAGE_PNG_H

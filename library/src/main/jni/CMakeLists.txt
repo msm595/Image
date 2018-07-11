@@ -15,8 +15,16 @@
 cmake_minimum_required(VERSION 3.4.1)
 project(root)
 
+OPTION(IMAGE_SINGLE_SHARED_LIB "Compile image as a single shared library with all codecs included" FALSE)
+
 add_subdirectory(cpufeatures)
-add_subdirectory(libjpeg-turbo)
-add_subdirectory(libpng)
-add_subdirectory(giflib)
+
+if(IMAGE_SINGLE_SHARED_LIB)
+    add_subdirectory(libjpeg-turbo)
+    add_subdirectory(libpng)
+    add_subdirectory(giflib)
+endif()
+
 add_subdirectory(image)
+
+unset(IMAGE_SINGLE_SHARED_LIB CACHE)
