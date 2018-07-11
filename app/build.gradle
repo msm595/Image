@@ -20,7 +20,10 @@ android {
 }
 
 dependencies {
-    implementation project(":singlelib")
+    implementation project(":core")
+    implementation project(":png")
+    implementation project(":jpeg")
+    implementation project(":gif")
     implementation 'com.android.support:appcompat-v7:27.1.0'
     implementation 'com.android.support:support-v4:27.1.0'
     implementation 'com.android.support:recyclerview-v7:27.1.0'
