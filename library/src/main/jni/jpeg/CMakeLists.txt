@@ -50,9 +50,6 @@ set(LIBJPEG_TURBO_SOURCES
     libjpeg-turbo/jquant1.c
     libjpeg-turbo/jquant2.c
     libjpeg-turbo/jutils.c
-    ../image/static_image.c
-    ../image/image_convert.c
-    ../image/image_utils.c
 )
 set(LIBJPEG_TURBO_INCLUDES
     ${CMAKE_CURRENT_SOURCE_DIR}
@@ -64,8 +61,14 @@ set(LIBJPEG_TURBO_INCLUDES
 set(LIBJPEG_TURBO_DEFINITIONS
 )
 set(LIBJPEG_TURBO_LIBRARIES
-    log
 )
+if(NOT ${IMAGE_SINGLE_SHARED_LIB})
+    set(LIBJPEG_TURBO_LIBRARIES
+        ${LIBJPEG_TURBO_LIBRARIES}
+        image
+        log
+    )
+endif()
 
 if (${ANDROID_ABI} STREQUAL "armeabi-v7a")
 

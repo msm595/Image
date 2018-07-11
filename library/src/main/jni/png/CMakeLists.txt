@@ -32,11 +32,6 @@ set(LIBPNG_SOURCES
     libpng/pngrutil.c
     libpng/pngset.c
     libpng/pngtrans.c
-    ../image/static_image.c
-    ../image/stream/stream.c
-    ../image/image_utils.c
-    ../image/image_convert.c
-    ../image/delegate_image.c
 )
 set(LIBPNG_INCLUDES
     ${CMAKE_CURRENT_SOURCE_DIR}
@@ -51,6 +46,13 @@ set(LIBPNG_LIBRARIES
     z
     log
 )
+if(NOT ${IMAGE_SINGLE_SHARED_LIB})
+    set(LIBPNG_LIBRARIES
+        ${LIBPNG_LIBRARIES}
+        image
+        log
+    )
+endif()
 
 if (${ANDROID_ABI} STREQUAL "armeabi-v7a")
 

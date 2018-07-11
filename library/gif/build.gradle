@@ -10,6 +10,10 @@ android {
             manifest.srcFile 'AndroidManifest.xml'
         }
     }
+    
+    packagingOptions {
+        exclude '**/libimage.so'
+    }
 
     defaultConfig {
         minSdkVersion rootProject.ext.minSdkVersion
@@ -35,7 +39,7 @@ android {
 
     externalNativeBuild {
         cmake {
-            path '../src/main/jni/gif/CMakeLists.txt'
+            path '../src/main/jni/CMakeLists.txt'
         }
     }
 }

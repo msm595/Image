@@ -10,6 +10,10 @@ android {
             manifest.srcFile 'AndroidManifest.xml'
         }
     }
+    
+    packagingOptions {
+        exclude '**/libimage.so'
+    }
 
     defaultConfig {
         minSdkVersion rootProject.ext.minSdkVersion

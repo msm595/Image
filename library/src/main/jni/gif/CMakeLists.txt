@@ -21,7 +21,6 @@ set(GIFLIB_SOURCES
     giflib/lib/gif_hash.c
     giflib/lib/gifalloc.c
     giflib/lib/openbsd-reallocarray.c
-    ../image/delegate_image.c
 )
 set(GIFLIB_INCLUDES
     ${CMAKE_CURRENT_SOURCE_DIR}
@@ -33,9 +32,16 @@ set(GIFLIB_INCLUDES
 set(GIFLIB_DEFINITIONS
 )
 set(GIFLIB_LIBRARIES
-    log
 )
+if(NOT ${IMAGE_SINGLE_SHARED_LIB})
+    set(GIFLIB_LIBRARIES
+        ${GIFLIB_LIBRARIES}
+        image
+        log
+    )
+endif()
 
+# TODO: untangle these
 if(IMAGE_SINGLE_SHARED_LIB)
     set(GIFLIB_EXPORT_LIBRARIES ${GIFLIB_LIBRARIES} PARENT_SCOPE)
     set(GIFLIB_EXPORT_INCLUDES ${GIFLIB_INCLUDES} PARENT_SCOPE)
